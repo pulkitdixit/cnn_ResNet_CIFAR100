@@ -22,15 +22,15 @@ batch_size = 100
 learn_rate = 0.001
 scheduler_step_size = 5
 scheduler_gamma = 0.5
-num_epochs = 50
+num_epochs = 5
 
 transform_train = transforms.Compose([transforms.RandomRotation(10),
                                       transforms.RandomHorizontalFlip(),
                                       transforms.ToTensor()
                                      ])
 
-train_dataset = torchvision.datasets.CIFAR100(root = '~/scractch', train=True, transform=transform_train, download=False)
-test_dataset = torchvision.datasets.CIFAR100(root = '~/scractch', train=False, transform=transform_train, download=False)
+train_dataset = torchvision.datasets.CIFAR100(root = '~/scractch/', train=True, transform=transform_train, download=True)
+test_dataset = torchvision.datasets.CIFAR100(root = '~/scractch/', train=False, transform=transform_train, download=True)
 
 train_loader = torch.utils.data.DataLoader(dataset = train_dataset, batch_size = batch_size, shuffle = True, num_workers = 8)
 test_loader = torch.utils.data.DataLoader(dataset = test_dataset, batch_size = batch_size, shuffle = False, num_workers = 8)
@@ -132,10 +132,14 @@ def upsample(x):
   up = nn.Upsample(scale_factor=7, mode='bilinear')
   return(up(x))
 
-def resnet18(pretrained=True):
+def resnet18(pretrained=True, progress=True):
   model = torchvision.models.resnet.ResNet(torchvision.models.resnet.BasicBlock, [2, 4, 4, 2])
   if pretrained:
-    model.load_state_dict(model_zoo.load_url(model_urls['resnet18'], model_dir='./'))
+        state_dict = load_state_dict_from_url('https://download.pytorch.org/models/resnet18-5c106cde.pth',
+                                              progress=progress)
+        model.load_state_dict(state_dict, strict=False)
+#   if pretrained:
+#     model.load_state_dict(model_zoo.load_url('https://download.pytorch.org/models/resnet18-5c106cde.pth', model_dir='./'))
   return(model)
 
 #layers = [2, 4, 4, 2]
