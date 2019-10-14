@@ -1,0 +1,30 @@
+#!/bin/bash
+### set the number of nodes
+### set the number of PEs per node
+### set the XE feature
+#PBS -l nodes=02:ppn=16:xk
+### set the wallclock time
+#PBS -l walltime=02:00:00
+### set the job name
+#PBS -N CIFAR100_HW4
+###PBS -q stat-qu
+### set the job stdout and stderr
+#PBS -e $PBS_JOBID.err
+#PBS -o $PBS_JOBID.out
+### set email notification
+#PBS -m bea
+#PBS -M pulkitd2@illinois.edu
+### In case of multiple allocations, select which one to charge
+###PBS -A xyz
+ 
+ 
+cd $PBS_O_WORKDIR
+ 
+###module load anaconda/3
+###module load python/2.0.1
+
+module load bwpy
+module load bwpy-mpi
+ 
+###python3 HW_2-40k.py
+aprun -n 2 -N 1 python cifar100_sync_sgd.py
