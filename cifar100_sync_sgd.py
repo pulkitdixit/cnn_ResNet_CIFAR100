@@ -56,8 +56,8 @@ transform_train = transforms.Compose([transforms.RandomRotation(10),
                                       transforms.ToTensor()
                                      ])
 
-train_dataset = torchvision.datasets.CIFAR100(root = '~/scractch', train=True, transform=transform_train, download=True)
-test_dataset = torchvision.datasets.CIFAR100(root = '~/scractch', train=False, transform=transform_train, download=True)
+train_dataset = torchvision.datasets.CIFAR100(root = '~/scractch', train=True, transform=transform_train, download=False)
+test_dataset = torchvision.datasets.CIFAR100(root = '~/scractch', train=False, transform=transform_train, download=False)
 
 train_loader = torch.utils.data.DataLoader(dataset = train_dataset, batch_size = batch_size, shuffle = True, num_workers = 8)
 test_loader = torch.utils.data.DataLoader(dataset = test_dataset, batch_size = batch_size, shuffle = False, num_workers = 8)
@@ -221,8 +221,7 @@ for epochs in range(num_epochs):
     #train_acc = correct/total
     correct = comm.all_reduce(correct, op = MPI.SUM)
     train_acc = correct/np.float(len(train_loader.dataset))
-    if rank == 0:
-        print('Training accuracy: \t', train_acc)
+    print('Training accuracy: \t', train_acc)
     #print('--------------------------------------------------')
     train_acc_list.append(train_acc)
     
